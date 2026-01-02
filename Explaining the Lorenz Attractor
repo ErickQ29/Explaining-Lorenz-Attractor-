@@ -1,0 +1,130 @@
+Lorenz Attractor
+A minimal exploration of a classical chaotic system
+
+This repository contains a self-contained Julia script that numerically integrates the Lorenz system and produces the characteristic three-dimensional butterfly trajectory.
+
+The goal is intentionally minimalistic and pedagogical:
+
+no heavy dependencies (only Plots.jl),
+
+no premature optimization,
+
+no unnecessary abstractions.
+
+Just the original Lorenz equations (1963), implemented in roughly 60 clear and readable lines of code.
+
+1. Historical background
+
+In 1961, meteorologist Edward N. Lorenz at MIT was running a 12-variable atmospheric model on a Royal McBee LGP-30 computer.
+To save time, he restarted a simulation from an intermediate point, manually re-entering values rounded to three decimal places instead of the six stored internally.
+
+To his surprise, the new forecast diverged completely within a few simulated days.
+
+This accidental experiment revealed what is now known as sensitive dependence on initial conditions, a defining feature of deterministic chaos.
+
+By 1963, Lorenz had distilled this phenomenon into the simplest dissipative system capable of producing aperiodic deterministic flow.
+The resulting equations became the canonical toy model of chaos theory.
+
+2. The Lorenz system
+
+The governing ordinary differential equations are
+
+dx/dt = σ (y − x)
+dy/dt = x (ρ − z) − y
+dz/dt = x y − β z
+
+
+with the classical parameter values
+
+σ = 10        (Prandtl number)
+ρ = 28        (reduced Rayleigh number)
+β = 8 / 3     (geometric factor)
+
+Dynamical regimes
+
+0 < ρ < 1: the origin is globally stable.
+
+ρ = 1: a pitchfork bifurcation creates two nontrivial fixed points.
+
+ρ > 24.74: these fixed points become unstable and almost all trajectories are attracted to a strange attractor.
+
+The Lorenz attractor is fractal, bounded, and non-periodic, with an estimated dimension of approximately 2.06.
+
+3. Key dynamical properties
+
+Volume contraction
+The divergence of the vector field is constant and negative:
+
+∇·F = −(σ + 1 + β) < 0
+
+
+As a result, phase-space volumes contract exponentially.
+
+Discrete symmetry
+The system is invariant under the transformation
+
+(x, y, z) → (−x, −y, z)
+
+
+Sensitive dependence on initial conditions
+Trajectories initially separated by approximately 10⁻⁶ diverge after roughly 15 time units.
+
+4. Numerical integration
+
+The system is integrated using forward Euler with time step
+
+Δt = 0.02
+
+
+This choice is sufficient to preserve the geometry of the attractor over short integration times (30 time units, 1,500 steps).
+For quantitative analysis, higher-order or adaptive methods are recommended.
+
+5. Julia implementation
+
+The file lorenz.jl defines the system state and advances it using an in-place stepping function.
+The trajectory is visualized using Plots.jl and rendered as an animated GIF.
+
+anim = @animate for i in 1:1_500
+    step!(attractor)
+    push!(plt, attractor.x, attractor.y, attractor.z)
+end every 10
+
+gif(anim, "lorenz.gif")
+
+6. Reproducing the figure
+
+Install Julia 1.9 or newer.
+
+Clone the repository and enter the directory:
+
+git clone <repository-url>
+cd <repository>
+
+
+Run:
+
+julia lorenz.jl
+
+
+Open lorenz.gif.
+
+7. Further exploration
+
+Set ρ = 24.1 to observe the collapse of transient chaos.
+
+Increase Δt to study numerical instability.
+
+Replace Euler integration with DifferentialEquations.jl and compute Lyapunov exponents.
+
+Color the trajectory by the instantaneous value of z.
+
+8. References
+
+E. N. Lorenz, Deterministic nonperiodic flow,
+Journal of the Atmospheric Sciences 20 (1963), 130–141.
+
+C. Sparrow, The Lorenz Equations: Bifurcations, Chaos, and Strange Attractors,
+Springer, 1982.
+
+Three simple equations, a few lines of code,
+and a lifetime of deterministic chaos.
