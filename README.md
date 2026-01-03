@@ -35,7 +35,7 @@ Despite their simplicity, these equations generate dynamics that are neither per
 
 ## 2. The Lorenz equations
 
-The Lorenz system is defined by
+The Lorenz system is defined by 
 
 ```
 dx/dt = σ (y − x)
